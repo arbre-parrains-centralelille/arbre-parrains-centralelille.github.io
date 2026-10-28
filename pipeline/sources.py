@@ -4,7 +4,9 @@ Chaque source renvoie le même format, ce qui permet de changer d'outil de saisi
 sans toucher à la validation ni au site :
 
     promos    : liste de {"id", "promo", "nom"}
-    personnes : liste de {"id", "prenom", "nom", "promo", "parrain"}
+    personnes : liste de {"id", "prenom", "nom", "promo", "parrain", "redoublant"}
+                redoublant = True si la personne a redoublé : elle peut alors
+                             parrainer deux promos après la sienne
                 promo   = année (int) ou valeur brute non reconnue
                 parrain = id (int) d'une personne, None si pas de parrain,
                           ou valeur brute (str) si la référence est cassée
@@ -110,6 +112,7 @@ def lire_grist():
             "nom": _texte(f.get("nom")),
             "promo": promo,
             "parrain": parrain,
+            "redoublant": bool(f.get("redoublant")),
         })
     return promos, personnes
 

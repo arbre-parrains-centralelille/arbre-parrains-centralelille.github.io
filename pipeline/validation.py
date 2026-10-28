@@ -76,7 +76,7 @@ def valider(promos, personnes):
             ecart = p["promo"] - pa["promo"]
             if ecart <= 0:
                 erreurs.append(f"Parrain pas plus ancien que son fillot : {libelle(pa)} -> {libelle(p)}")
-            elif ecart != 1:
+            elif ecart != 1 and not (ecart == 2 and pa.get("redoublant")):
                 avertissements.append(f"Écart de {ecart} ans entre parrain et fillot : {libelle(pa)} -> {libelle(p)}")
 
     # --- Cycles (A parrain de B parrain de ... A) ---

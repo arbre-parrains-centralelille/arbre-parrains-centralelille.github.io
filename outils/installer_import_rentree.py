@@ -49,6 +49,9 @@ return {partie}.title() if {partie}.isupper() or {partie}.islower() else {partie
 
 FORMULES_PERSONNES = [
     ("cle", "Text", "cle (technique)", CLE + 'return cle(f"{$prenom} {$nom}")'),
+    # Case à cocher : un redoublant parraine deux promos après la sienne sans que ce
+    # soit signalé comme une anomalie.
+    ("redoublant", "Bool", "Redoublant", None),
 ]
 
 STATUT = r'''def nom_complet(p):
@@ -75,8 +78,10 @@ if not $parrain:
     return "❌ Parrain introuvable : ajoute-le d'abord dans Personnes, ou corrige son nom ici"
 if $parrain.id not in [c.id for c in $candidats]:
     return f"⚠️ Parrain reconnu malgré une différence d'écriture : {nom_complet($parrain)}, à vérifier"
+if $parrain.promo.promo == $promo - 2 and $parrain.redoublant:
+    return "✅ OK (parrain redoublant)"
 if $parrain.promo.promo != $promo - 1:
-    return f"⚠️ Parrain en promo {$parrain.promo.promo}, à vérifier (redoublant ?)"
+    return f"⚠️ Parrain en promo {$parrain.promo.promo}, à vérifier (redoublant ? coche la case dans Personnes)"
 return "✅ OK"
 '''
 

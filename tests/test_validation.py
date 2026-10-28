@@ -43,6 +43,14 @@ class TestValidation(unittest.TestCase):
         self.assertTrue(any("5 fillots" in a for a in avert))
         self.assertTrue(any("Écart de 2 ans" in a for a in avert))
 
+    def test_redoublant(self):
+        ps = [pers(1, "Anne", 2026), pers(2, "Bob", 2028, 1)]
+        _, avert = valider(PROMOS, ps)
+        self.assertTrue(any("Écart de 2 ans" in a for a in avert))
+        ps[0]["redoublant"] = True
+        _, avert = valider(PROMOS, ps)
+        self.assertFalse(any("Écart" in a for a in avert))
+
     def test_promo_inconnue(self):
         erreurs, _ = valider(PROMOS, [pers(1, "Anne", 2030)])
         self.assertTrue(any("Promo inconnue" in e for e in erreurs))
