@@ -44,7 +44,7 @@ if "_" in s:
 else:
     prenom, _, nom = s.partition(" ")
 {partie} = re.sub(r"\s*-+\s*", "-", {partie}).strip()
-return {partie}.title() if {partie}.isupper() else {partie}
+return {partie}.title() if {partie}.isupper() or {partie}.islower() else {partie}
 '''
 
 FORMULES_PERSONNES = [
