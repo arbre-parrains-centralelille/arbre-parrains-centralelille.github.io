@@ -1,7 +1,7 @@
 "use strict";
 
 // Adresse affichée pour les corrections et les demandes de retrait.
-const CONTACT = "A_DEFINIR@exemple.fr";
+const CONTACT = "matthieu.walrafen@centrale.centralelille.fr";
 
 // Dimensions de l'arbre (en pixels SVG)
 const NOEUD_L = 136, NOEUD_H = 46, ECART_X = 14, RANGEE = 96, MARGE_BANDE = 150;
