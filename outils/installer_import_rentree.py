@@ -153,7 +153,9 @@ def api(methode, chemin, corps=None):
 
 
 def colonne(id_, type_, label, formule):
-    champs = {"type": type_, "label": label, "isFormula": formule is not None}
+    # untieColIdFromLabel : sans ça, Grist renomme l'identifiant de la colonne quand
+    # on change son libellé (« cle » -> « cle_technique_ »), et les formules cassent.
+    champs = {"type": type_, "label": label, "isFormula": formule is not None, "untieColIdFromLabel": True}
     if formule is not None:
         champs["formula"] = formule
     return {"id": id_, "fields": champs}
@@ -161,14 +163,24 @@ def colonne(id_, type_, label, formule):
 
 def synchroniser(table, colonnes):
     """Crée les colonnes manquantes et met à jour les formules des colonnes existantes."""
-    existantes = {c["id"] for c in api("GET", f"/tables/{table}/columns")["columns"]}
+    existantes = {c["id"]: c["fields"]["label"] for c in api("GET", f"/tables/{table}/columns")["columns"]}
+    # Réparation : colonne renommée par Grist -> on lui rend son identifiant
+    par_label = {label: id_ for id_, label in existantes.items()}
+    renommages = [
+        {"id": par_label[label], "fields": {"untieColIdFromLabel": True, "colId": id_}}
+        for id_, _, label, _ in colonnes
+        if id_ not in existantes and label in par_label and par_label[label] != id_
+    ]
+    if renommages:
+        api("PATCH", f"/tables/{table}/columns", {"columns": renommages})
+        existantes = {c["id"]: c["fields"]["label"] for c in api("GET", f"/tables/{table}/columns")["columns"]}
     a_creer = [colonne(*c) for c in colonnes if c[0] not in existantes]
     a_maj = [colonne(*c) for c in colonnes if c[0] in existantes and c[3] is not None]
     if a_creer:
         api("POST", f"/tables/{table}/columns", {"columns": a_creer})
     if a_maj:
         api("PATCH", f"/tables/{table}/columns", {"columns": a_maj})
-    print(f"{table} : {len(a_creer)} colonne(s) créée(s), {len(a_maj)} formule(s) mise(s) à jour")
+    print(f"{table} : {len(renommages)} réparée(s), {len(a_creer)} créée(s), {len(a_maj)} formule(s) mise(s) à jour")
 
 
 def main():
