@@ -33,6 +33,7 @@ def cle(t):
 '''
 
 # Découpe « Nom_Prénom » (format du mercato) ou, à défaut, « Prénom Nom ».
+# Si seule la 2e partie est en MAJUSCULES (« Fanghao_HOU »), c'est elle le nom.
 # Les commentaires entre parenthèses sont retirés.
 DECOUPE = r'''import re
 s = re.sub(r"\(.*\)", " ", $fillot_brut or "")
@@ -41,6 +42,8 @@ if not re.search(r"[^\W\d_]", s):  # ligne sans lettre (ex. numéro de groupe)
     return ""
 if "_" in s:
     nom, prenom = s.split("_", 1)
+    if prenom.strip().isupper() and not nom.strip().isupper():
+        nom, prenom = prenom, nom
 else:
     prenom, _, nom = s.partition(" ")
 {partie} = re.sub(r"\s*-+\s*", "-", {partie}).strip()
@@ -56,6 +59,27 @@ FORMULES_PERSONNES = [
 
 STATUT = r'''def nom_complet(p):
     return f"{p.prenom} {p.nom} ({p.promo.promo})"
+
+def statut_parrain():
+    if not $cles_parrain:
+        return "⚠️ Sans parrain"
+    if not $parrain:
+        meme_promo = [p for c in $cles_parrain for p in Personnes.lookupRecords(cle=c, promo=promo.id)]
+        if meme_promo:
+            p = meme_promo[0]
+            return (f"❌ {p.prenom} {p.nom} est en promo {$promo}, comme le fillot. "
+                    "As-tu ajouté la nouvelle promo dans la table Promos ?")
+        if len($candidats) > 1:
+            return "❌ Plusieurs parrains possibles : " + ", ".join(nom_complet(p) for p in $candidats)
+        return "❌ Parrain introuvable : ajoute-le d'abord dans Personnes, ou corrige son nom ici"
+    if $parrain.id not in [c.id for c in $candidats]:
+        return f"⚠️ Parrain reconnu malgré une différence d'écriture : {nom_complet($parrain)}, à vérifier"
+    if $parrain.promo.promo == $promo - 2 and $parrain.redoublant:
+        return "✅ OK (parrain redoublant)"
+    if $parrain.promo.promo != $promo - 1:
+        return f"⚠️ Parrain en promo {$parrain.promo.promo}, à vérifier (redoublant ? coche la case dans Personnes)"
+    return "✅ OK"
+
 if not $nom:
     return "Ignoré (ligne sans nom)" if $fillot_brut else ""
 if not $promo:
@@ -65,24 +89,12 @@ if Personnes.lookupRecords(cle=$cle, promo=promo.id):
     return "✔ Déjà dans l'arbre"
 if len(Import_rentree.lookupRecords(cle=$cle)) > 1:
     return "❌ Fillot en double dans l'import"
-if not $cles_parrain:
-    return "⚠️ Sans parrain"
-if not $parrain:
-    meme_promo = [p for c in $cles_parrain for p in Personnes.lookupRecords(cle=c, promo=promo.id)]
-    if meme_promo:
-        p = meme_promo[0]
-        return (f"❌ {p.prenom} {p.nom} est en promo {$promo}, comme le fillot. "
-                "As-tu ajouté la nouvelle promo dans la table Promos ?")
-    if len($candidats) > 1:
-        return "❌ Plusieurs parrains possibles : " + ", ".join(nom_complet(p) for p in $candidats)
-    return "❌ Parrain introuvable : ajoute-le d'abord dans Personnes, ou corrige son nom ici"
-if $parrain.id not in [c.id for c in $candidats]:
-    return f"⚠️ Parrain reconnu malgré une différence d'écriture : {nom_complet($parrain)}, à vérifier"
-if $parrain.promo.promo == $promo - 2 and $parrain.redoublant:
-    return "✅ OK (parrain redoublant)"
-if $parrain.promo.promo != $promo - 1:
-    return f"⚠️ Parrain en promo {$parrain.promo.promo}, à vérifier (redoublant ? coche la case dans Personnes)"
-return "✅ OK"
+statut = statut_parrain()
+# Le « nom » lu est un prénom connu, et le « prénom » lu n'en est pas un : inversion probable.
+if not statut.startswith("❌") and Personnes.lookupRecords(prenom=$nom) and not Personnes.lookupRecords(prenom=$prenom):
+    return (f"⚠️ Prénom et nom peut-être inversés ({$prenom} / {$nom}). "
+            "Si oui, inverse-les dans Fillot (collé). " + statut)
+return statut
 '''
 
 PARRAIN = r'''import difflib

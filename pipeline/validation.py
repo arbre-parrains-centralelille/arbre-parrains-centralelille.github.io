@@ -99,8 +99,17 @@ def valider(promos, personnes):
     for pid, fs in fillots.items():
         if len(fs) > MAX_FILLOTS:
             avertissements.append(f"{len(fs)} fillots pour {libelle(par_id[pid])}")
+    # Dans la dernière promo, personne n'a encore de fillot : un fillot sans parrain y est
+    # isolé par construction, on le résume en une ligne au lieu de les lister.
+    derniere = max(annees, default=None)
+    nouveaux_sans_parrain = 0
     for p in personnes:
         if p["parrain"] is None and p["id"] not in fillots and not est_inconnu(p):
-            avertissements.append(f"Personne isolée (ni parrain ni fillot) : {libelle(p)}")
+            if p["promo"] == derniere:
+                nouveaux_sans_parrain += 1
+            else:
+                avertissements.append(f"Personne isolée (ni parrain ni fillot) : {libelle(p)}")
+    if nouveaux_sans_parrain:
+        avertissements.append(f"{nouveaux_sans_parrain} personne(s) de la promo {derniere} sans parrain")
 
     return erreurs, avertissements
