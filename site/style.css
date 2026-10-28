@@ -17,8 +17,9 @@
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
-body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; }
-main { flex: 1; display: flex; flex-direction: column; }
+/* La page tient exactement dans l'écran : l'arbre prend toute la place restante. */
+body { margin: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
+main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
 button { font: inherit; }
 
 /* --- En-tête et recherche --- */
@@ -55,9 +56,9 @@ button { font: inherit; }
 .stats { margin-top: 2rem; font-size: 1.05rem; }
 .stats b { color: var(--primaire); font-size: 1.4rem; }
 
-/* --- Vue arbre : mobile d'abord (arbre puis fiche) --- */
-.vue { display: flex; flex-direction: column-reverse; flex: 1; }
-.cadre-arbre { position: relative; height: 64vh; min-height: 360px; background: #fff; border-bottom: 1px solid var(--bordure); }
+/* --- Vue arbre : fiche en bandeau, arbre en dessous --- */
+.vue { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.cadre-arbre { position: relative; flex: 1; min-height: 0; background: #fff; }
 #arbre { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
 #arbre:active { cursor: grabbing; }
 .outils { position: absolute; top: .6rem; right: .6rem; display: flex; gap: .4rem; z-index: 2; }
@@ -76,27 +77,13 @@ button { font: inherit; }
 .pastille.fratrie { background: var(--fratrie); }
 .pastille.autre { background: var(--autre); }
 
-.fiche { padding: 1rem 1.2rem 1.5rem; }
-.fiche h2 { margin: 0; font-size: 1.4rem; color: var(--primaire); }
-.fiche .promo { margin: .2rem 0 1rem; color: var(--discret); }
-.fiche h3 { margin: 1.1rem 0 .4rem; font-size: .8rem; text-transform: uppercase; letter-spacing: .05em; color: var(--discret); }
-.fiche ul { margin: 0; padding: 0; list-style: none; }
-.fiche li { margin: .15rem 0; }
-.fiche a { color: var(--lignee); text-decoration: none; }
-.fiche a:hover { text-decoration: underline; }
-.fiche .aucun { color: var(--discret); font-style: italic; }
-.fiche .famille { margin-top: 1.3rem; padding-top: .8rem; border-top: 1px solid var(--bordure); font-size: .9rem; color: var(--discret); }
-
-/* Ordinateur : fiche à gauche, arbre sur toute la hauteur restante */
-@media (min-width: 900px) {
-  body { height: 100vh; }
-  main { min-height: 0; }
-  .vue { flex-direction: row; min-height: 0; }
-  .fiche { width: 300px; flex-shrink: 0; overflow-y: auto; border-right: 1px solid var(--bordure); }
-  .cadre-arbre { flex: 1; height: auto; border-bottom: none; }
-  .pied { padding: .5rem; border-top: 1px solid var(--bordure); }
-  .pied p { display: inline; margin: 0 .5rem; }
+.fiche {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem 1rem;
+  padding: .6rem 1rem; background: var(--fond); border-bottom: 1px solid var(--bordure);
 }
+.fiche h2 { margin: 0; font-size: 1.25rem; color: var(--primaire); }
+.fiche .promo { margin: 0; color: var(--discret); }
+.fiche .famille { flex-basis: 100%; margin: 0; font-size: .85rem; color: var(--discret); }
 
 /* --- Arbre (SVG) --- */
 .bande rect { fill: var(--bande); }
@@ -117,8 +104,8 @@ button { font: inherit; }
 .noeud:hover rect { filter: brightness(.94); }
 
 /* --- Pied de page --- */
-.pied { padding: 1rem; text-align: center; font-size: .85rem; color: var(--discret); }
-.pied p { margin: .3rem 0; }
+.pied { padding: .45rem 1rem; text-align: center; font-size: .8rem; color: var(--discret); border-top: 1px solid var(--bordure); }
+.pied p { display: inline; margin: 0 .4rem; }
 .pied a { color: var(--lignee); }
 
 @media (max-width: 600px) {

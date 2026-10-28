@@ -145,27 +145,8 @@ function lireHash() {
 
 // --- Fiche ------------------------------------------------------------------------
 
-function lienPersonne(p) {
-  const li = document.createElement("li");
-  const a = document.createElement("a");
-  a.href = `#p=${p.id}`;
-  a.textContent = nomComplet(p);
-  li.appendChild(a);
-  if (p.promo) li.append(` (${p.promo})`);
-  return li;
-}
-
-function section(titre, personnes, vide) {
-  const frag = document.createDocumentFragment();
-  const h = document.createElement("h3");
-  h.textContent = titre;
-  const ul = document.createElement("ul");
-  if (personnes.length) personnes.forEach((p) => ul.appendChild(lienPersonne(p)));
-  else ul.innerHTML = `<li class="aucun">${vide}</li>`;
-  frag.append(h, ul);
-  return frag;
-}
-
+// Les liens (parrain, fillots…) sont déjà visibles dans l'arbre : la fiche est
+// réservée aux informations propres à la personne (formation, associations… à venir).
 function remplirFiche(p, racine, taille, generations) {
   const fiche = $("#fiche");
   fiche.replaceChildren();
@@ -176,13 +157,6 @@ function remplirFiche(p, racine, taille, generations) {
   promo.textContent = libellePromo(p.promo);
   fiche.append(h2, promo);
 
-  const parrain = parrainDe(p);
-  const fratrie = parrain ? etat.fillots.get(parrain.id).filter((f) => f !== p) : [];
-  fiche.append(
-    section("Parrain / marraine", parrain ? [parrain] : [], "Inconnu"),
-    section(`Fillots (${etat.fillots.get(p.id).length})`, etat.fillots.get(p.id), "Aucun pour l'instant"),
-    section(`Frères et sœurs (${fratrie.length})`, fratrie, "Aucun"),
-  );
   const fam = document.createElement("p");
   fam.className = "famille";
   fam.textContent = `Famille de ${taille} personnes sur ${generations} générations, depuis ${nomComplet(racine)} (${racine.promo}).`;
@@ -291,8 +265,16 @@ function centrer(anime = true) {
   const svg = d3.select("#arbre");
   const { width, height } = svg.node().getBoundingClientRect();
   const k = width < 600 ? 0.8 : 1;
-  const d = etat.noeudFocus;
-  const t = d3.zoomIdentity.translate(width / 2 - d.x * k, height / 2 - d.y * k).scale(k);
+  const d = etat.noeudFocus, b = etat.boite, marge = 16;
+  // Centré sur la personne, mais sans laisser de vide au-dessus ou en dessous de l'arbre.
+  let ty = height / 2 - d.y * k;
+  if (b.h * k + 2 * marge > height) {
+    ty = Math.min(ty, marge - b.y * k);
+    ty = Math.max(ty, height - marge - (b.y + b.h) * k);
+  } else {
+    ty = (height - b.h * k) / 2 - b.y * k;
+  }
+  const t = d3.zoomIdentity.translate(width / 2 - d.x * k, ty).scale(k);
   (anime ? svg.transition().duration(400) : svg).call(etat.zoom.transform, t);
 }
 
