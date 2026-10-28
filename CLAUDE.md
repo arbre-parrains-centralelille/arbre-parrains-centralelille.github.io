@@ -9,7 +9,10 @@ Arbre parrains/fillots de Centrale Lille. Voir README.md pour l'architecture.
 - Une personne n'a qu'un parrain ; un parrain peut avoir 1 à 3 fillots (ou plus, à signaler).
 - Un écart de promo parrain/fillot ≠ 1 est une exception (ex. redoublement de Jasper Van Gossum, promo 2025) :
   à signaler, pas à bloquer.
-- Maillons manquants : personne « ? Inconnu » dans la promo concernée.
+- Maillons manquants : personne de prénom « ? » (nom « Inconnu ») dans la promo concernée ; exportée avec `inconnu: true`.
+- Grist : tables `Personnes` (prenom, nom, promo → Promos, parrain → Personnes) et `Promos` (promo entier, nom).
+- Pipeline en bibliothèque standard uniquement (pas de dépendance à installer en CI) ; d3 copié dans `site/vendor/`.
+- Le site lit uniquement `site/data/arbre.json` : changer d'outil de saisie = réécrire un lecteur dans `pipeline/sources.py`.
 - Tout ce qui finit dans le JSON du site est public : n'y mettre que prénom, nom, promo, sauf consentement.
 - Les mainteneurs (BDE) ne codent pas forcément : les procédures doivent rester faisables sans terminal.
 

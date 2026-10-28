@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Arbre des parrains · Centrale Lille</title>
+  <meta name="description" content="Retrouve un étudiant de Centrale Lille et toute sa famille de parrains et fillots.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="entete">
+    <a class="titre" href="#">Arbre des parrains <span>· Centrale Lille</span></a>
+    <div class="recherche" role="search">
+      <input id="recherche" type="search" placeholder="Chercher un·e étudiant·e…" autocomplete="off"
+             aria-label="Chercher un étudiant" aria-controls="resultats" aria-expanded="false">
+      <ul id="resultats" class="resultats" role="listbox" hidden></ul>
+    </div>
+  </header>
+
+  <main>
+    <section id="accueil" class="accueil">
+      <h1>Retrouve ta famille de parrains et fillots</h1>
+      <p>Tape un prénom ou un nom dans la barre de recherche : son arbre s'affiche, avec ses ancêtres,
+        ses frères et sœurs et ses descendants.</p>
+      <p id="stats" class="stats"></p>
+    </section>
+
+    <section id="vue" class="vue" hidden>
+      <aside id="fiche" class="fiche" aria-live="polite"></aside>
+      <div class="cadre-arbre">
+        <div class="outils">
+          <button id="btn-centrer" type="button">Centrer</button>
+          <button id="btn-ensemble" type="button">Vue d'ensemble</button>
+        </div>
+        <svg id="arbre" role="img" aria-label="Arbre généalogique"></svg>
+        <ul class="legende">
+          <li><span class="pastille focus"></span>Personne choisie</li>
+          <li><span class="pastille lignee"></span>Lignée</li>
+          <li><span class="pastille fratrie"></span>Frères et sœurs</li>
+          <li><span class="pastille autre"></span>Famille</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pied">
+    <p>Données issues de l'historique des parrainages, mises à jour par le BDE.
+      <span id="maj"></span></p>
+    <p>Une erreur, ou tu veux être retiré·e de l'arbre ? <a id="contact" href="#">Écris-nous</a>.</p>
+  </footer>
+
+  <script src="vendor/d3.v7.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

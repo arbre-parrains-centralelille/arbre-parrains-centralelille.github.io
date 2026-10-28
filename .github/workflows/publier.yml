@@ -1,0 +1,61 @@
+# Exporte les données depuis Grist, les valide, archive le JSON dans git et publie le site.
+# Si la validation échoue, rien n'est publié : le site garde la dernière version valide.
+name: Publier le site
+
+on:
+  schedule:
+    - cron: "0 3 * * *"   # chaque nuit à 3 h UTC
+  workflow_dispatch:       # bouton « Run workflow » dans l'onglet Actions
+  push:
+    branches: [main]
+    paths: ["site/**", "pipeline/**", ".github/workflows/**"]
+
+permissions:
+  contents: write   # pour archiver le JSON
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publication
+  cancel-in-progress: false
+
+jobs:
+  publier:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Tests
+        run: python -m unittest -v
+
+      - name: Export depuis Grist et validation
+        if: vars.GRIST_DOC_ID != ''
+        env:
+          GRIST_DOC_ID: ${{ vars.GRIST_DOC_ID }}
+          GRIST_SERVEUR: ${{ vars.GRIST_SERVEUR || 'https://docs.getgrist.com' }}
+          GRIST_API_KEY: ${{ secrets.GRIST_API_KEY }}
+        run: python -m pipeline.exporter --source grist
+
+      - name: Archiver les données dans git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/data/arbre.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Données : export Grist du $(date -u +%F)"
+            git push
+          fi
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploiement
+        uses: actions/deploy-pages@v4

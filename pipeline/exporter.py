@@ -69,6 +69,13 @@ def main():
 
     args.sortie.parent.mkdir(parents=True, exist_ok=True)
     donnees = construire_json(promos, personnes)
+    # Données identiques à l'export précédent : on ne touche pas au fichier, pour que
+    # la date affichée reste celle du dernier vrai changement (et éviter un commit vide).
+    if args.sortie.exists():
+        ancien = json.loads(args.sortie.read_text(encoding="utf-8"))
+        if ancien.get("promos") == donnees["promos"] and ancien.get("personnes") == donnees["personnes"]:
+            print("Aucun changement depuis le dernier export.")
+            return
     # Une personne par ligne : l'historique git montre clairement qui a changé.
     compact = lambda x: json.dumps(x, ensure_ascii=False, separators=(",", ":"))
     texte = (
