@@ -1,0 +1,1 @@
+# Aucune dépendance pour l'instant : la migration n'utilise que la bibliothèque standard.
