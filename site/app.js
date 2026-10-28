@@ -12,7 +12,7 @@ const etat = { personnes: new Map(), fillots: new Map(), promos: {}, zoom: null,
 // --- Données ----------------------------------------------------------------
 
 function normaliser(s) {
-  return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[-'’.]/g, " ").trim();
+  return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[-–—'’._]/g, " ").trim();
 }
 
 function nomComplet(p) {

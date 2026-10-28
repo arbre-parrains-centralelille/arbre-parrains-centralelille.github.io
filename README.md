@@ -20,6 +20,7 @@ on cherche un étudiant, on voit sa famille (ancêtres, frères et sœurs, desce
 | `migration/` | Migration unique de l'ancien Google Sheet vers `data/grist_import/` (CSV à importer dans Grist) |
 | `pipeline/` | `sources.py` lit Grist (ou les CSV locaux), `validation.py` vérifie les règles, `exporter.py` écrit `site/data/arbre.json` |
 | `site/` | Site statique : `index.html`, `style.css`, `app.js`, d3 dans `vendor/`, données dans `data/` |
+| `outils/` | `installer_import_rentree.py` : installe dans Grist la table `Import_rentree` (saisie de rentrée du BDE) |
 | `tests/` | Tests de la validation (`python -m unittest`) |
 | `.github/workflows/publier.yml` | Chaque nuit / à la demande : export Grist → validation → archive git → GitHub Pages |
 

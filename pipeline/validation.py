@@ -13,7 +13,7 @@ MAX_FILLOTS = 3
 
 def cle_nom(prenom, nom):
     s = unicodedata.normalize("NFKD", f"{prenom} {nom}").encode("ascii", "ignore").decode()
-    return re.sub(r"[\s\-']+", " ", s).strip().lower()
+    return re.sub(r"[\s\-–—'’_]+", " ", s).strip().lower()
 
 
 def est_inconnu(p):
