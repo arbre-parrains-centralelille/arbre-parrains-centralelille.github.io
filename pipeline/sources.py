@@ -13,6 +13,7 @@ sans toucher à la validation ni au site :
 import csv
 import json
 import os
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -50,18 +51,39 @@ def _entier(v):
 
 # --- Grist ---------------------------------------------------------------------
 
+class ErreurGrist(Exception):
+    pass
+
+
+EXPLICATIONS_HTTP = {
+    401: "clé API refusée : vérifie GRIST_API_KEY (copiée en entier, sans espace ni retour à la ligne)",
+    403: "accès refusé : le compte de la clé API n'a pas accès à ce document",
+    404: "document ou table introuvable : vérifie GRIST_DOC_ID, GRIST_SERVEUR et le nom de la table",
+}
+
+
 def _grist_records(serveur, doc_id, table, cle_api):
     url = f"{serveur.rstrip('/')}/api/docs/{doc_id}/tables/{table}/records"
     req = urllib.request.Request(url, headers={"Authorization": f"Bearer {cle_api}"})
-    with urllib.request.urlopen(req, timeout=60) as rep:
-        return json.load(rep)["records"]
+    try:
+        with urllib.request.urlopen(req, timeout=60) as rep:
+            return json.load(rep)["records"]
+    except urllib.error.HTTPError as e:
+        detail = EXPLICATIONS_HTTP.get(e.code, e.read().decode(errors="replace")[:300])
+        raise ErreurGrist(f"Grist a répondu {e.code} pour la table {table} ({url}) : {detail}") from None
+    except urllib.error.URLError as e:
+        raise ErreurGrist(f"Serveur Grist injoignable ({serveur}) : {e.reason}") from None
 
 
 def lire_grist():
     charger_env()
-    serveur = os.environ.get("GRIST_SERVEUR", "https://docs.getgrist.com")
-    doc_id = os.environ["GRIST_DOC_ID"]
-    cle_api = os.environ["GRIST_API_KEY"]
+    config = {}
+    for nom in ("GRIST_DOC_ID", "GRIST_API_KEY"):
+        config[nom] = os.environ.get(nom, "").strip()
+        if not config[nom]:
+            raise ErreurGrist(f"Variable {nom} absente ou vide (fichier .env en local, Settings > Secrets and variables sur GitHub)")
+    serveur = os.environ.get("GRIST_SERVEUR", "").strip() or "https://docs.getgrist.com"
+    doc_id, cle_api = config["GRIST_DOC_ID"], config["GRIST_API_KEY"]
 
     promos = []
     for r in _grist_records(serveur, doc_id, TABLE_PROMOS, cle_api):

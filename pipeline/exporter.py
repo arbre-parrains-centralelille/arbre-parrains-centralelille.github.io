@@ -54,7 +54,14 @@ def main():
     parser.add_argument("--sortie", type=Path, default=SORTIE)
     args = parser.parse_args()
 
-    promos, personnes = sources.lire_grist() if args.source == "grist" else sources.lire_csv()
+    try:
+        promos, personnes = sources.lire_grist() if args.source == "grist" else sources.lire_csv()
+    except sources.ErreurGrist as e:
+        print(f"ERREUR : {e}", file=sys.stderr)
+        if os.environ.get("GITHUB_STEP_SUMMARY"):
+            with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as f:
+                f.write(f"## Export impossible\n\n{e}\n")
+        sys.exit(1)
     erreurs, avertissements = valider(promos, personnes)
 
     rapport = rapport_markdown(personnes, erreurs, avertissements)
