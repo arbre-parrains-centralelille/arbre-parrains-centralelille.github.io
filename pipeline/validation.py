@@ -12,8 +12,10 @@ MAX_FILLOTS = 3
 
 
 def cle_nom(prenom, nom):
-    s = unicodedata.normalize("NFKD", f"{prenom} {nom}").encode("ascii", "ignore").decode()
-    return re.sub(r"[\s\-–—'’_]+", " ", s).strip().lower()
+    """Même normalisation que la colonne `cle` de Grist (outils/installer_import_rentree.py)."""
+    s = re.sub(r"[\s\-–—'’_()]+", " ", f"{prenom} {nom}")
+    s = unicodedata.normalize("NFKD", s).encode("ascii", "ignore").decode()
+    return re.sub(r"\s+", " ", s).strip().lower()
 
 
 def est_inconnu(p):
