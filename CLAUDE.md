@@ -6,7 +6,7 @@ Décisions, état et prochaines étapes : `C:\Users\matth\Documents\Vault\Perso\
 Manuel BDE (Claude Docs, hors dépôt car il contient un numéro de téléphone) : https://claude.ai/artifact/9iXnHLUjjyNGWbait7w4o5
 
 ## État (2026-10-29, en pause)
-- Checklist avant partage en cours : voir « Points ouverts » de la synthèse. Commits locaux non poussés : repointer `origin` vers l'organisation `arbre-parrains-centralelille` avant de pousser.
+- Checklist avant partage en cours : voir « Points ouverts » de la synthèse. Tout est poussé ; dépôt encore nommé `arbre.parrains.centralelille`, à renommer `arbre-parrains-centralelille.github.io` (puis `git remote set-url`).
 
 ## Conventions
 - Code, commentaires et données en français.
