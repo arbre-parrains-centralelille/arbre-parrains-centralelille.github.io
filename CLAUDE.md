@@ -3,10 +3,10 @@
 ## Projet
 Arbre parrains/fillots de Centrale Lille. Voir README.md pour l'architecture.
 Décisions, état et prochaines étapes : `C:\Users\matth\Documents\Vault\Perso\02-Projets\arbre-genealogique-cl\synthese.md`.
-Manuel BDE (Claude Docs, hors dépôt car il contient un numéro de téléphone) : https://claude.ai/artifact/9iXnHLUjjyNGWbait7w4o5
+Manuel et passation BDE (Claude Docs, hors dépôt car il contient un numéro de téléphone) : https://claude.ai/artifact/9iXnHLUjjyNGWbait7w4o5
 
 ## État (2026-10-29)
-- Checklist avant partage presque finie : voir « Points ouverts » de la synthèse. Passation BDE : https://claude.ai/artifact/8PEd4Uzs9ASs1EjP1L8iQA
+- Checklist avant partage presque finie : voir « Points ouverts » de la synthèse. Manuel et passation BDE réunis dans le doc ci-dessus (export PDF pour le BDE).
 
 ## Conventions
 - Code, commentaires et données en français.
