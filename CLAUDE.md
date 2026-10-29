@@ -6,7 +6,7 @@ Décisions, état et prochaines étapes : `C:\Users\matth\Documents\Vault\Perso\
 Manuel et passation BDE (Claude Docs, hors dépôt car il contient un numéro de téléphone) : https://claude.ai/artifact/9iXnHLUjjyNGWbait7w4o5
 
 ## État (2026-10-29)
-- Checklist avant partage presque finie : voir « Points ouverts » de la synthèse. Manuel et passation BDE réunis dans le doc ci-dessus (export PDF pour le BDE).
+- Projet en service. Prochaine intervention : intégrer la promo 2029 (déjà créée dans Promos) via Import_rentree quand le BDE envoie la liste ; procédure dans le manuel. Le document Grist reste volontairement dans l'espace perso de Matthieu.
 
 ## Conventions
 - Code, commentaires et données en français.
