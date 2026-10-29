@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Un parrain (doré) et ses deux fillots, aux couleurs du site -->
+  <rect width="64" height="64" rx="14" fill="#1f3a5f"/>
+  <path d="M32 24V33M18 33H46M18 33V40M46 33V40" stroke="#9cc3e6" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <circle cx="32" cy="18" r="8" fill="#e0a526"/>
+  <circle cx="18" cy="46" r="7" fill="#ffffff"/>
+  <circle cx="46" cy="46" r="7" fill="#ffffff"/>
+</svg>
