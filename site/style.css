@@ -1,16 +1,28 @@
+/* Charte graphique Centrale Lille (oct. 2022), couleurs de l'École Centrale :
+   jaune d'or et jaune soleil, avec le gris ardoise commun ; teintes autorisées. */
+@font-face {
+  font-family: "Roboto";
+  src: url("vendor/roboto/roboto-latin-wght.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 :root {
-  --fond: #f5f7fa;
-  --texte: #1c2733;
-  --discret: #5f6f80;
-  --bordure: #d5dde6;
-  --primaire: #1f3a5f;
-  --focus: #e0a526;
-  --lignee: #2f6db3;
-  --fratrie: #9cc3e6;
+  --ardoise: #376795;
+  --jaune-or: #f9b000;
+  --jaune-soleil: #ffcc00;
+  --fond: #f7f9fb;
+  --texte: #1d2f42;
+  --discret: #5b6b7c;
+  --bordure: #d3dde8;
+  --primaire: var(--ardoise);
+  --focus: var(--jaune-or);
+  --lignee: var(--ardoise);
+  --fratrie: #ffeea6;      /* jaune soleil à 35 % */
   --autre: #ffffff;
-  --bande: #eaeff5;
-  --rayon: 10px;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --bande: #eff3f7;        /* gris ardoise à 8 % */
+  --rayon: 4px;            /* formes carrées : marqueur de l'École Centrale */
+  font-family: Roboto, Arial, sans-serif;
   color: var(--texte);
   background: var(--fond);
 }
@@ -28,6 +40,7 @@ button { font: inherit; }
   display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; align-items: center;
   padding: .7rem 1rem;
   background: var(--primaire); color: #fff;
+  border-bottom: 4px solid var(--jaune-soleil);
 }
 .titre { color: #fff; text-decoration: none; font-weight: 700; font-size: 1.1rem; white-space: nowrap; }
 .titre span { font-weight: 400; opacity: .8; }
@@ -36,7 +49,7 @@ button { font: inherit; }
   width: 100%; padding: .65rem .9rem; font-size: 1rem;
   border: none; border-radius: var(--rayon); outline: none;
 }
-#recherche:focus { box-shadow: 0 0 0 3px var(--focus); }
+#recherche:focus { box-shadow: 0 0 0 3px var(--jaune-soleil); }
 .resultats {
   position: absolute; left: 0; right: 0; top: calc(100% + 4px);
   margin: 0; padding: .3rem 0; list-style: none;
@@ -50,8 +63,16 @@ button { font: inherit; }
 .resultats .vide { color: var(--discret); cursor: default; }
 
 /* --- Accueil --- */
-.accueil { max-width: 640px; margin: 12vh auto 0; padding: 0 1.2rem; text-align: center; }
-.accueil h1 { font-size: 1.7rem; color: var(--primaire); }
+.accueil { position: relative; max-width: 640px; margin: 12vh auto 0; padding: 0 1.2rem; text-align: center; }
+.accueil > :not(.decor) { position: relative; }
+.accueil h1 { font-size: 1.9rem; font-weight: 800; color: var(--primaire); margin-bottom: .3rem; }
+/* Décor : polygone à 10 côtés (marqueur primaire), écrou, carrés et sinusoïde
+   (marqueurs secondaires de l'École Centrale). Purement décoratif. */
+.decor { position: absolute; pointer-events: none; }
+.decor-polygone { width: 300px; left: -320px; top: -60px; }
+.decor-carres { width: 120px; right: -150px; top: 140px; }
+.sinusoide { overflow: visible; display: block; width: 150px; height: 14px; margin: 0 auto .8rem; }
+@media (max-width: 1100px) { .decor { display: none; } }
 .accueil p { color: var(--discret); line-height: 1.5; }
 .stats { margin-top: 2rem; font-size: 1.05rem; }
 .stats b { color: var(--primaire); font-size: 1.4rem; }
@@ -63,7 +84,7 @@ button { font: inherit; }
 #arbre:active { cursor: grabbing; }
 .outils { position: absolute; top: .6rem; right: .6rem; display: flex; gap: .4rem; z-index: 2; }
 .outils button {
-  padding: .4rem .7rem; border: 1px solid var(--bordure); border-radius: 8px;
+  padding: .4rem .7rem; border: 1px solid var(--bordure); border-radius: var(--rayon);
   background: rgba(255,255,255,.95); cursor: pointer;
 }
 .legende {
@@ -87,17 +108,17 @@ button { font: inherit; }
 
 /* --- Arbre (SVG) --- */
 .bande rect { fill: var(--bande); }
-.bande text { fill: var(--discret); font-size: 12px; font-weight: 600; }
-.lien { fill: none; stroke: #b7c3d0; stroke-width: 1.5; }
+.bande text { fill: var(--ardoise); font-size: 12px; font-weight: 600; }
+.lien { fill: none; stroke: #b9c9d9; stroke-width: 1.5; }
 .lien.lignee { stroke: var(--lignee); stroke-width: 2.5; }
 .noeud { cursor: pointer; }
-.noeud rect { fill: var(--autre); stroke: #b7c3d0; stroke-width: 1.2; }
+.noeud rect { fill: var(--autre); stroke: #b9c9d9; stroke-width: 1.2; }
 .noeud text { fill: var(--texte); font-size: 12px; pointer-events: none; }
 .noeud .prenom { font-weight: 700; font-size: 13px; }
-.noeud.fratrie rect { fill: var(--fratrie); stroke: #7aa9d4; }
+.noeud.fratrie rect { fill: var(--fratrie); stroke: var(--jaune-soleil); }
 .noeud.lignee rect { fill: var(--lignee); stroke: var(--lignee); }
 .noeud.lignee text { fill: #fff; }
-.noeud.focus rect { fill: var(--focus); stroke: #b58212; stroke-width: 2; }
+.noeud.focus rect { fill: var(--focus); stroke: #c98d00; stroke-width: 2; }
 .noeud.focus text { fill: var(--texte); }
 .noeud.inconnu rect { stroke-dasharray: 4 3; fill: #f8f9fb; }
 .noeud.inconnu text { fill: var(--discret); font-style: italic; }

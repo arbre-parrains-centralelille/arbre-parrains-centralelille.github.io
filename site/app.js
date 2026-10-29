@@ -242,7 +242,7 @@ function afficher(p) {
     .on("click", (_, d) => allerA(d.data.id))
     .on("keydown", (e, d) => { if (e.key === "Enter") allerA(d.data.id); });
   n.append("title").text((d) => `${nomComplet(d.data)} — ${libellePromo(d.data.promo)}`);
-  n.append("rect").attr("width", NOEUD_L).attr("height", NOEUD_H).attr("rx", 8);
+  n.append("rect").attr("width", NOEUD_L).attr("height", NOEUD_H).attr("rx", 3);
   n.append("text").attr("class", "prenom").attr("x", NOEUD_L / 2).attr("y", 19).attr("text-anchor", "middle")
     .text((d) => tronquer(d.data.inconnu ? "?" : d.data.prenom || ""));
   n.append("text").attr("x", NOEUD_L / 2).attr("y", 35).attr("text-anchor", "middle")
