@@ -3,6 +3,9 @@
 Plateforme publique pour consulter les lignées parrain → fillot des étudiants de Centrale Lille :
 on cherche un étudiant, on voit sa famille (ancêtres, frères et sœurs, descendants).
 
+Site : https://arbre-parrains-centralelille.github.io/ (dépôt dans l'organisation GitHub `arbre-parrains-centralelille`).
+Couleurs et formes : charte graphique Centrale Lille (oct. 2022), palette de l'École Centrale.
+
 ## Architecture
 
 ```
