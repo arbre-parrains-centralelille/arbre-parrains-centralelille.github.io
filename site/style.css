@@ -107,6 +107,10 @@ button { font: inherit; }
 .pied { padding: .45rem 1rem; text-align: center; font-size: .8rem; color: var(--discret); border-top: 1px solid var(--bordure); }
 .pied p { display: inline; margin: 0 .4rem; }
 .pied a { color: var(--lignee); }
+.rgpd { display: inline; }
+.rgpd summary { display: inline; cursor: pointer; color: var(--lignee); }
+.rgpd[open] { display: block; max-width: 40rem; margin: .4rem auto 0; text-align: left; }
+.rgpd[open] p { display: block; margin: .3rem 0; }
 
 @media (max-width: 600px) {
   .outils button { padding: .3rem .55rem; font-size: .85rem; }
