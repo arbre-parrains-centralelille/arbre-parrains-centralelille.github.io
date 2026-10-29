@@ -5,6 +5,9 @@ Arbre parrains/fillots de Centrale Lille. Voir README.md pour l'architecture.
 Décisions, état et prochaines étapes : `C:\Users\matth\Documents\Vault\Perso\02-Projets\arbre-genealogique-cl\synthese.md`.
 Manuel BDE (Claude Docs, hors dépôt car il contient un numéro de téléphone) : https://claude.ai/artifact/9iXnHLUjjyNGWbait7w4o5
 
+## État (2026-10-29, en pause)
+- Checklist avant partage en cours : voir « Points ouverts » de la synthèse. Commits locaux non poussés : repointer `origin` vers l'organisation `arbre-parrains-centralelille` avant de pousser.
+
 ## Conventions
 - Code, commentaires et données en français.
 - `promo` = année d'entrée + 3 (jamais « annee_sortie »).
