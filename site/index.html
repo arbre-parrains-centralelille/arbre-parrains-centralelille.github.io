@@ -2,58 +2,61 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#376795">
   <title>Arbre des parrains · Centrale Lille</title>
   <meta name="description" content="Retrouve un étudiant de Centrale Lille et toute sa famille de parrains et fillots.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="mode-accueil">
   <header class="entete">
-    <a class="titre" href="#">Arbre des parrains <span>· Centrale Lille</span></a>
-    <div class="recherche" role="search">
-      <input id="recherche" type="search" placeholder="Chercher un·e étudiant·e…" autocomplete="off"
-             aria-label="Chercher un étudiant" aria-controls="resultats" aria-expanded="false">
-      <ul id="resultats" class="resultats" role="listbox" hidden></ul>
+    <a class="titre" href="#">
+      <svg class="titre-logo" viewBox="0 0 200 200" aria-hidden="true"><use href="#decagone"/></svg>
+      <span class="titre-nom">Arbre des parrains</span>
+      <span class="titre-ecole">Centrale Lille</span>
+    </a>
+    <div class="recherche recherche-entete" role="search">
+      <svg class="loupe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="recherche" type="search" placeholder="Chercher quelqu'un d'autre…" autocomplete="off"
+             aria-label="Chercher un étudiant" aria-controls="resultats" aria-expanded="false" role="combobox">
+      <ul id="resultats" class="resultats" role="listbox" aria-label="Résultats" hidden></ul>
     </div>
   </header>
 
   <main>
     <section id="accueil" class="accueil">
-      <svg class="decor decor-polygone" viewBox="0 0 200 200" aria-hidden="true">
-        <polygon points="196,100 177.7,156.4 129.7,191.3 70.3,191.3 22.3,156.4 4,100 22.3,43.6 70.3,8.7 129.7,8.7 177.7,43.6"
-                 fill="none" stroke="#f9b000" stroke-width="1"/>
-        <polygon fill="#f9b000" points="35.3,156.4 32.8,164 26.3,168.8 18.3,168.8 11.8,164 9.3,156.4 11.8,148.8 18.3,144 26.3,144 32.8,148.8"/>
-        <polygon fill="#f7f9fb" points="26.8,156.4 25.9,159 23.7,160.7 20.9,160.7 18.7,159 17.8,156.4 18.7,153.8 20.9,152.1 23.7,152.1 25.9,153.8"/>
+      <svg class="decor decor-polygone" viewBox="0 0 200 200" aria-hidden="true"><use href="#decagone-contour"/></svg>
+      <svg class="decor decor-carres" viewBox="0 0 100 100" aria-hidden="true">
+        <rect x="4" y="4" width="60" height="60" fill="none" stroke="#ffcc00" stroke-width="3"/>
+        <rect x="30" y="30" width="60" height="60" fill="#376795"/>
       </svg>
-      <svg class="decor decor-carres" viewBox="0 0 120 100" aria-hidden="true">
-        <rect x="2" y="2" width="70" height="70" fill="none" stroke="#ffcc00" stroke-width="2"/>
-        <rect x="48" y="22" width="64" height="64" fill="#376795"/>
-      </svg>
-      <h1>Retrouve ta famille de parrains et fillots</h1>
+      <p class="surtitre">Parrains · fillots · promos</p>
+      <h1>Retrouve ta famille.</h1>
       <svg class="sinusoide" viewBox="0 0 150 14" aria-hidden="true">
-        <path d="M0,7 Q7.5,0 15,7 Q22.5,14 30,7 Q37.5,0 45,7 Q52.5,14 60,7 Q67.5,0 75,7 Q82.5,14 90,7 Q97.5,0 105,7 Q112.5,14 120,7 Q127.5,0 135,7 Q142.5,14 150,7"
-              fill="none" stroke="#f9b000" stroke-width="3" stroke-linecap="round"/>
+        <path d="M0,7 Q7.5,0 15,7 Q22.5,14 30,7 Q37.5,0 45,7 Q52.5,14 60,7 Q67.5,0 75,7 Q82.5,14 90,7 Q97.5,0 105,7 Q112.5,14 120,7 Q127.5,0 135,7 Q142.5,14 150,7"/>
       </svg>
-      <p>Tape un prénom ou un nom dans la barre de recherche : son arbre s'affiche, avec ses ancêtres,
-        ses frères et sœurs et ses descendants.</p>
-      <p id="stats" class="stats"></p>
+      <p class="intro">Ton parrain, ses parrains avant lui, tes co-fillots et toute ta descendance, promo par promo.</p>
+
+      <div class="recherche recherche-accueil" role="search">
+        <label for="recherche-accueil">Chercher un·e étudiant·e</label>
+        <div class="champ">
+          <svg class="loupe" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="recherche-accueil" type="search" placeholder="Prénom ou nom…" autocomplete="off"
+                 aria-controls="resultats-accueil" aria-expanded="false" role="combobox">
+        </div>
+        <ul id="resultats-accueil" class="resultats" role="listbox" aria-label="Résultats" hidden></ul>
+        <p class="aide">Une faute de frappe passe, les accents aussi.</p>
+      </div>
+
+      <div id="stats" class="stats"></div>
     </section>
 
     <section id="vue" class="vue" hidden>
+      <svg id="arbre" role="img" aria-label="Arbre de la famille"></svg>
       <aside id="fiche" class="fiche" aria-live="polite"></aside>
-      <div class="cadre-arbre">
-        <div class="outils">
-          <button id="btn-centrer" type="button">Centrer</button>
-          <button id="btn-ensemble" type="button">Vue d'ensemble</button>
-        </div>
-        <svg id="arbre" role="img" aria-label="Arbre généalogique"></svg>
-        <ul class="legende">
-          <li><span class="pastille focus"></span>Personne choisie</li>
-          <li><span class="pastille lignee"></span>Lignée</li>
-          <li><span class="pastille fratrie"></span>Frères et sœurs</li>
-          <li><span class="pastille autre"></span>Famille</li>
-        </ul>
+      <div id="minicarte" class="minicarte" hidden>
+        <svg role="img" aria-label="Mini-carte : partie de l'arbre affichée (touche pour t'y déplacer)"></svg>
       </div>
     </section>
   </main>
@@ -61,7 +64,7 @@
   <footer class="pied">
     <p>Données issues de l'historique des parrainages, mises à jour par le BDE.
       <span id="maj"></span></p>
-    <p>Une erreur, ou tu veux être retiré·e de l'arbre ? <a id="contact" href="#">Écris-nous</a>.</p>
+    <p>Une erreur, ou tu veux être retiré·e de l'arbre ? <a class="contact" href="#">Écris-nous</a>.</p>
     <details class="rgpd">
       <summary>Données personnelles</summary>
       <p>Ce site publie uniquement le prénom, le nom, la promo et les liens de parrainage des étudiant·es,
@@ -72,6 +75,16 @@
         « Écris-nous » ci-dessus.</p>
     </details>
   </footer>
+
+  <!-- Formes de la charte : polygone à 10 côtés (marqueur primaire de l'École Centrale). -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <polygon id="decagone" fill="#f9b000"
+               points="196,100 177.7,156.4 129.7,191.3 70.3,191.3 22.3,156.4 4,100 22.3,43.6 70.3,8.7 129.7,8.7 177.7,43.6"/>
+      <polygon id="decagone-contour" fill="none" stroke="#f9b000" stroke-width="1.5"
+               points="196,100 177.7,156.4 129.7,191.3 70.3,191.3 22.3,156.4 4,100 22.3,43.6 70.3,8.7 129.7,8.7 177.7,43.6"/>
+    </defs>
+  </svg>
 
   <script src="vendor/d3.v7.min.js"></script>
   <script src="app.js"></script>

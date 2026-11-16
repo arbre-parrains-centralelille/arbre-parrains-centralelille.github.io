@@ -1,5 +1,6 @@
 /* Charte graphique Centrale Lille (oct. 2022), couleurs de l'École Centrale :
-   jaune d'or et jaune soleil, avec le gris ardoise commun ; teintes autorisées. */
+   gris ardoise, jaune d'or et jaune soleil ; formes carrées, polygone à 10 côtés, sinusoïde.
+   Interprétation « BDE » : titres très gras, aplats francs, ombre décalée jaune. */
 @font-face {
   font-family: "Roboto";
   src: url("vendor/roboto/roboto-latin-wght.woff2") format("woff2");
@@ -11,129 +12,244 @@
   --ardoise: #376795;
   --jaune-or: #f9b000;
   --jaune-soleil: #ffcc00;
+  --encre: #1d2f42;          /* texte et contours forts */
   --fond: #f7f9fb;
-  --texte: #1d2f42;
+  --texte-2: #4a5b6d;        /* texte secondaire (contraste ≥ 4.5:1 sur blanc) */
   --discret: #5b6b7c;
   --bordure: #d3dde8;
-  --primaire: var(--ardoise);
-  --focus: var(--jaune-or);
-  --lignee: var(--ardoise);
-  --fratrie: #ffeea6;      /* jaune soleil à 35 % */
-  --autre: #ffffff;
-  --bande: #eff3f7;        /* gris ardoise à 8 % */
-  --rayon: 4px;            /* formes carrées : marqueur de l'École Centrale */
+  --trait: #c3d1de;          /* liens et contours des cases ordinaires */
+  --fratrie: #ffeea6;        /* jaune soleil à 35 % */
+  --fratrie-bord: #c98d00;
+  --rayon: 4px;              /* formes carrées : marqueur de l'École Centrale */
   font-family: Roboto, Arial, sans-serif;
-  color: var(--texte);
+  color: var(--encre);
   background: var(--fond);
+  -webkit-text-size-adjust: 100%;
 }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 /* La page tient exactement dans l'écran : l'arbre prend toute la place restante. */
+html, body { height: 100%; }
 body { margin: 0; height: 100vh; height: 100dvh; display: flex; flex-direction: column; }
 main { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow-y: auto; }
-button { font: inherit; }
+button, input { font: inherit; }
+a { color: var(--ardoise); }
+a:hover { color: var(--encre); }
 
-/* --- En-tête et recherche --- */
+/* --- En-tête --------------------------------------------------------------- */
 .entete {
-  position: sticky; top: 0; z-index: 10;
-  display: flex; flex-wrap: wrap; gap: .6rem 1.5rem; align-items: center;
-  padding: .7rem 1rem;
-  background: var(--primaire); color: #fff;
+  position: relative; z-index: 20;
+  display: flex; flex-wrap: wrap; align-items: center; gap: .6rem 1.75rem;
+  padding: .7rem 1.25rem; padding-top: max(.7rem, env(safe-area-inset-top));
+  background: var(--ardoise); color: #fff;
   border-bottom: 4px solid var(--jaune-soleil);
 }
-.titre { color: #fff; text-decoration: none; font-weight: 700; font-size: 1.1rem; white-space: nowrap; }
-.titre span { font-weight: 400; opacity: .8; }
-.recherche { position: relative; flex: 1; min-width: 220px; max-width: 520px; }
-#recherche {
-  width: 100%; padding: .65rem .9rem; font-size: 1rem;
-  border: none; border-radius: var(--rayon); outline: none;
+.titre { display: flex; align-items: center; gap: .6rem; min-height: 44px; color: #fff; text-decoration: none; }
+.titre:hover { color: #fff; }
+.titre-logo { width: 26px; height: 26px; flex: none; }
+.titre-nom { font-weight: 900; font-size: 1.1rem; letter-spacing: -.01em; white-space: nowrap; }
+.titre-ecole { font-size: .875rem; opacity: .85; white-space: nowrap; }
+
+.loupe { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
+.recherche { position: relative; }
+.recherche input { min-width: 0; border: none; outline: none; background: transparent; color: inherit; }
+
+/* Recherche de l'en-tête (vue arbre) : champ translucide, blanc quand on tape. */
+.recherche-entete {
+  flex: 1 1 260px; max-width: 480px;
+  display: flex; align-items: center; gap: .5rem;
+  height: 44px; padding: 0 .8rem; border-radius: var(--rayon);
+  background: rgba(255, 255, 255, .14); color: #fff;
+  transition: background .15s;
 }
-#recherche:focus { box-shadow: 0 0 0 3px var(--jaune-soleil); }
+.recherche-entete input { flex: 1; height: 100%; font-size: 1rem; }
+.recherche-entete input::placeholder { color: rgba(255, 255, 255, .85); }
+.recherche-entete:focus-within { background: #fff; color: var(--encre); box-shadow: 0 0 0 3px var(--jaune-soleil); }
+.recherche-entete:focus-within .loupe { color: var(--ardoise); }
+.recherche-entete:focus-within input::placeholder { color: var(--discret); }
+.mode-accueil .recherche-entete { display: none; }
+.mode-accueil .titre { flex: 1; }
+.mode-accueil .titre-ecole { margin-left: auto; }
+
+/* --- Résultats de recherche --------------------------------------------------- */
 .resultats {
-  position: absolute; left: 0; right: 0; top: calc(100% + 4px);
-  margin: 0; padding: .3rem 0; list-style: none;
-  background: #fff; color: var(--texte);
-  border-radius: var(--rayon); box-shadow: 0 8px 24px rgba(0,0,0,.18);
-  max-height: 60vh; overflow-y: auto;
+  position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 30;
+  margin: 0; padding: .35rem; list-style: none;
+  display: flex; flex-direction: column; gap: .3rem;
+  background: var(--fond); color: var(--encre);
+  border-radius: var(--rayon); box-shadow: 0 10px 30px rgba(29, 47, 66, .22);
+  max-height: min(60vh, 520px); overflow-y: auto;
 }
-.resultats li { padding: .55rem .9rem; cursor: pointer; }
-.resultats li small { color: var(--discret); }
-.resultats li[aria-selected="true"], .resultats li:hover { background: var(--bande); }
-.resultats .vide { color: var(--discret); cursor: default; }
+.resultats li {
+  display: flex; align-items: center; gap: .75rem; min-height: 60px; padding: .45rem .6rem;
+  background: #fff; border: 1px solid var(--bordure); border-radius: var(--rayon); cursor: pointer;
+}
+.resultats li[aria-selected="true"], .resultats li:hover { border-color: var(--ardoise); box-shadow: inset 0 0 0 1px var(--ardoise); }
+.resultats .annee {
+  flex: none; width: 42px; height: 42px; border-radius: var(--rayon);
+  display: flex; align-items: center; justify-content: center;
+  background: #eff3f7; color: var(--ardoise); font-weight: 800; font-size: .8rem;
+}
+.resultats .qui { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.resultats .nom { font-size: 1rem; }
+.resultats .nom mark { background: var(--fratrie); color: inherit; font-weight: 700; }
+.resultats .sous { font-size: .8rem; color: var(--discret); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.resultats .vide { justify-content: center; color: var(--discret); cursor: default; min-height: 48px; }
+.resultats .vide:hover { border-color: var(--bordure); box-shadow: none; }
 
-/* --- Accueil --- */
-.accueil { position: relative; max-width: 640px; margin: 12vh auto 0; padding: 0 1.2rem; text-align: center; }
+/* --- Accueil ---------------------------------------------------------------------- */
+.accueil {
+  position: relative; width: 100%; max-width: 560px; margin: 0 auto;
+  padding: clamp(2rem, 8vh, 5rem) 1.5rem 2rem;
+  display: flex; flex-direction: column; gap: .9rem;
+}
 .accueil > :not(.decor) { position: relative; }
-.accueil h1 { font-size: 1.9rem; font-weight: 800; color: var(--primaire); margin-bottom: .3rem; }
-/* Décor : polygone à 10 côtés (marqueur primaire), écrou, carrés et sinusoïde
-   (marqueurs secondaires de l'École Centrale). Purement décoratif. */
+.surtitre { margin: 0; font-size: .8rem; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--ardoise); }
+.accueil h1 { margin: 0; font-size: clamp(2.4rem, 9vw, 3.4rem); font-weight: 900; line-height: 1.02; letter-spacing: -.035em; }
+.sinusoide { overflow: visible; display: block; width: 120px; height: 12px; }
+.sinusoide path { fill: none; stroke: var(--jaune-or); stroke-width: 3.5; stroke-linecap: round; }
+.intro { margin: 0 0 .6rem; font-size: 1rem; line-height: 1.5; color: var(--texte-2); max-width: 26rem; }
+
+.recherche-accueil { display: flex; flex-direction: column; gap: .5rem; }
+.recherche-accueil label { font-size: .875rem; font-weight: 700; }
+.recherche-accueil .champ {
+  display: flex; align-items: center; gap: .6rem; height: 58px; padding: 0 1rem;
+  background: #fff; border: 2px solid var(--encre); border-radius: var(--rayon);
+  box-shadow: 4px 4px 0 var(--jaune-or); color: var(--ardoise);
+}
+.recherche-accueil .champ:focus-within { box-shadow: 4px 4px 0 var(--jaune-or), 0 0 0 3px var(--jaune-soleil); }
+.recherche-accueil .loupe { width: 22px; height: 22px; }
+.recherche-accueil input { flex: 1; height: 100%; font-size: 1.06rem; color: var(--encre); }
+.recherche-accueil input::placeholder { color: #6b7a8a; }
+.recherche-accueil .resultats { top: calc(100% - 1.4rem); }
+.aide { margin: 0; font-size: .8rem; color: var(--discret); }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; margin-top: .6rem; }
+.stats:empty { display: none; }
+.stats .tuile { display: flex; flex-direction: column; gap: 2px; padding: .85rem .75rem; border-radius: var(--rayon); }
+.stats b { font-size: 1.65rem; font-weight: 900; line-height: 1; letter-spacing: -.02em; }
+.stats span { font-size: .8rem; }
+.stats .t1 { background: var(--ardoise); color: #fff; }
+.stats .t2 { background: #fff; border: 2px solid var(--ardoise); }
+.stats .t2 b { color: var(--ardoise); }
+.stats .t2 span { color: var(--texte-2); }
+.stats .t3 { background: var(--jaune-or); }
+.stats .erreur { grid-column: 1 / -1; color: var(--texte-2); }
+
+/* Décor : polygone à 10 côtés et carrés (marqueurs de l'École Centrale). Purement décoratif. */
 .decor { position: absolute; pointer-events: none; }
-.decor-polygone { width: 300px; left: -320px; top: -60px; }
-.decor-carres { width: 120px; right: -150px; top: 140px; }
-.sinusoide { overflow: visible; display: block; width: 150px; height: 14px; margin: 0 auto .8rem; }
-@media (max-width: 1100px) { .decor { display: none; } }
-.accueil p { color: var(--discret); line-height: 1.5; }
-.stats { margin-top: 2rem; font-size: 1.05rem; }
-.stats b { color: var(--primaire); font-size: 1.4rem; }
+.decor-polygone { width: 240px; right: -175px; top: 0; }
+.decor-carres { display: none; width: 110px; left: -170px; bottom: 30%; }
+@media (min-width: 900px) {
+  .decor-polygone { width: 320px; right: -300px; top: 30px; }
+  .decor-carres { display: block; }
+}
 
-/* --- Vue arbre : fiche en bandeau, arbre en dessous --- */
-.vue { display: flex; flex-direction: column; flex: 1; min-height: 0; }
-.cadre-arbre { position: relative; flex: 1; min-height: 0; background: #fff; }
-#arbre { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+/* --- Vue arbre --------------------------------------------------------------------- */
+.vue {
+  position: relative; flex: 1; min-height: 0; overflow: hidden;
+  background-color: #fff;
+  background-image: radial-gradient(#dde5ee 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+#arbre { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
 #arbre:active { cursor: grabbing; }
-.outils { position: absolute; top: .6rem; right: .6rem; display: flex; gap: .4rem; z-index: 2; }
-.outils button {
-  padding: .4rem .7rem; border: 1px solid var(--bordure); border-radius: var(--rayon);
-  background: rgba(255,255,255,.95); cursor: pointer;
-}
-.legende {
-  position: absolute; left: .6rem; bottom: .5rem; margin: 0; padding: .35rem .6rem;
-  display: flex; flex-wrap: wrap; gap: .2rem .8rem; list-style: none;
-  font-size: .78rem; color: var(--discret); background: rgba(255,255,255,.9); border-radius: 8px;
-}
-.pastille { display: inline-block; width: .8rem; height: .8rem; margin-right: .3rem; border-radius: 3px; vertical-align: -1px; border: 1px solid var(--bordure); }
-.pastille.focus { background: var(--focus); }
-.pastille.lignee { background: var(--lignee); }
-.pastille.fratrie { background: var(--fratrie); }
-.pastille.autre { background: var(--autre); }
 
+/* Carte de la personne : attachée à l'écran, jamais à l'arbre. En haut à gauche sur
+   ordinateur ; l'arbre est placé à côté au départ (voir placerAuDepart dans app.js). */
 .fiche {
-  display: flex; flex-wrap: wrap; align-items: baseline; gap: .1rem 1rem;
-  padding: .6rem 1rem; background: var(--fond); border-bottom: 1px solid var(--bordure);
+  position: absolute; left: 24px; top: 20px; z-index: 5;
+  width: 300px; padding: 1.1rem 1.25rem;
+  display: flex; flex-direction: column; gap: .65rem;
+  background: #fff; border: 2px solid var(--encre); border-radius: var(--rayon);
+  box-shadow: 5px 5px 0 var(--jaune-or);
 }
-.fiche h2 { margin: 0; font-size: 1.25rem; color: var(--primaire); }
-.fiche .promo { margin: 0; color: var(--discret); }
-.fiche .famille { flex-basis: 100%; margin: 0; font-size: .85rem; color: var(--discret); }
+.fiche .identite { display: flex; align-items: center; gap: .75rem; }
+.fiche .badge { position: relative; flex: none; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+.fiche .badge svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.fiche .badge span { position: relative; font-weight: 900; font-size: .95rem; }
+.fiche h2 { margin: 0; font-size: 1.5rem; font-weight: 900; line-height: 1.05; letter-spacing: -.02em; }
+.fiche .promo { margin: 2px 0 0; font-size: .875rem; color: var(--texte-2); }
+.fiche .famille { margin: 0; font-size: .85rem; line-height: 1.45; color: var(--texte-2); }
+.fiche .famille b { color: var(--encre); }
+.fiche .court { display: none; }
+.fiche .legende { display: flex; flex-wrap: wrap; gap: .3rem 1rem; margin: 0; padding: 0; list-style: none; font-size: .78rem; color: var(--texte-2); }
+.fiche .legende li { display: flex; align-items: center; gap: .4rem; }
+.fiche .legende .l-lignee { width: 18px; height: 4px; border-radius: 2px; background: var(--ardoise); }
+.fiche .legende .l-fratrie { width: 11px; height: 11px; border-radius: 2px; background: var(--fratrie); border: 1px solid var(--fratrie-bord); }
+.fiche .signaler { font-size: .78rem; }
 
-/* --- Arbre (SVG) --- */
-.bande rect { fill: var(--bande); }
-.bande text { fill: var(--ardoise); font-size: 12px; font-weight: 600; }
-.lien { fill: none; stroke: #b9c9d9; stroke-width: 1.5; }
-.lien.lignee { stroke: var(--lignee); stroke-width: 2.5; }
+/* Mini-carte : visible seulement quand l'arbre dépasse de l'écran. */
+.minicarte {
+  position: absolute; right: 12px; top: 12px; z-index: 5;
+  padding: 7px; background: rgba(255, 255, 255, .94);
+  border: 1px solid var(--trait); border-radius: 6px; box-shadow: 0 4px 14px rgba(29, 47, 66, .12);
+  cursor: pointer;
+}
+.minicarte svg { display: block; }
+.minicarte .m-noeud { fill: var(--trait); }
+.minicarte .m-noeud.lignee { fill: var(--ardoise); }
+.minicarte .m-noeud.fratrie { fill: #ffe08a; }
+.minicarte .m-noeud.focus { fill: var(--jaune-or); }
+.minicarte .m-cadre { fill: rgba(249, 176, 0, .12); stroke: var(--encre); stroke-width: 2; vector-effect: non-scaling-stroke; }
+
+/* --- Arbre (SVG) ----------------------------------------------------------------------- */
+.rail line { stroke: #edf1f5; stroke-width: 1; }
+.rail .annee { fill: var(--ardoise); font-size: 20px; font-weight: 800; }
+.rail .nom-promo { fill: var(--discret); font-size: 11.5px; }
+.lien { fill: none; stroke: var(--trait); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.lien.lignee { stroke: var(--ardoise); stroke-width: 4; }
 .noeud { cursor: pointer; }
-.noeud rect { fill: var(--autre); stroke: #b9c9d9; stroke-width: 1.2; }
-.noeud text { fill: var(--texte); font-size: 12px; pointer-events: none; }
+.noeud:focus { outline: none; }
+.noeud:focus-visible .case { stroke: var(--jaune-soleil); stroke-width: 3; }
+.noeud .case { fill: #fff; stroke: var(--trait); stroke-width: 1; }
+.noeud .ombre { fill: #dfe7ef; }
+.noeud text { fill: var(--encre); pointer-events: none; }
 .noeud .prenom { font-weight: 700; font-size: 13px; }
-.noeud.fratrie rect { fill: var(--fratrie); stroke: var(--jaune-soleil); }
-.noeud.lignee rect { fill: var(--lignee); stroke: var(--lignee); }
+.noeud .nom { font-size: 11.5px; fill: #33475b; }
+.noeud.lignee .case { fill: var(--ardoise); stroke: var(--ardoise); }
+.noeud.lignee .ombre { fill: none; }
 .noeud.lignee text { fill: #fff; }
-.noeud.focus rect { fill: var(--focus); stroke: #c98d00; stroke-width: 2; }
-.noeud.focus text { fill: var(--texte); }
-.noeud.inconnu rect { stroke-dasharray: 4 3; fill: #f8f9fb; }
+.noeud.fratrie .case { fill: var(--fratrie); stroke: var(--fratrie-bord); }
+.noeud.focus .case { fill: var(--jaune-or); stroke: var(--encre); stroke-width: 2; }
+.noeud.focus .ombre { fill: var(--encre); }
+.noeud.focus text { fill: var(--encre); }
+.noeud.inconnu .case { stroke-dasharray: 4 3; fill: #f8f9fb; }
 .noeud.inconnu text { fill: var(--discret); font-style: italic; }
-.noeud:hover rect { filter: brightness(.94); }
+.noeud:hover .case { filter: brightness(.95); }
 
-/* --- Pied de page --- */
-.pied { padding: .45rem 1rem; text-align: center; font-size: .8rem; color: var(--discret); border-top: 1px solid var(--bordure); }
+/* --- Pied de page ------------------------------------------------------------------------- */
+.pied {
+  padding: .6rem 1rem; padding-bottom: max(.6rem, env(safe-area-inset-bottom));
+  text-align: center; font-size: .8rem; color: var(--discret);
+  background: #fff; border-top: 1px solid var(--bordure);
+}
 .pied p { display: inline; margin: 0 .4rem; }
-.pied a { color: var(--lignee); }
 .rgpd { display: inline; }
-.rgpd summary { display: inline; cursor: pointer; color: var(--lignee); }
+.rgpd summary { display: inline; cursor: pointer; color: var(--ardoise); }
 .rgpd[open] { display: block; max-width: 40rem; margin: .4rem auto 0; text-align: left; }
 .rgpd[open] p { display: block; margin: .3rem 0; }
 
-@media (max-width: 600px) {
-  .outils button { padding: .3rem .55rem; font-size: .85rem; }
-  .legende { font-size: .72rem; }
+/* --- Téléphone ------------------------------------------------------------------------------ */
+@media (max-width: 699px) {
+  .entete { padding-left: .75rem; padding-right: .75rem; gap: .5rem; }
+  .mode-arbre .titre-nom, .mode-arbre .titre-ecole { display: none; }
+  .mode-arbre .titre { width: 44px; justify-content: center; }
+  .recherche-entete { position: static; }
+  /* Les résultats occupent toute la largeur, sous l'en-tête. */
+  .recherche-entete .resultats { left: 0; right: 0; top: 100%; border-radius: 0; max-height: calc(100dvh - 80px); padding: .5rem .75rem 1rem; }
+
+  /* La carte devient un bandeau compact posé en bas de l'écran. */
+  .fiche {
+    left: 12px; right: 12px; top: auto; bottom: max(14px, env(safe-area-inset-bottom));
+    width: auto; padding: .7rem .9rem; box-shadow: 4px 4px 0 var(--jaune-or);
+  }
+  .fiche .badge { width: 40px; height: 40px; }
+  .fiche h2 { font-size: 1.2rem; }
+  .fiche .promo, .fiche .famille, .fiche .legende, .fiche .signaler { display: none; }
+  .fiche .court { display: block; margin: 2px 0 0; font-size: .8rem; color: var(--texte-2); }
+
+  .mode-arbre .pied { display: none; }
+  .pied p { display: block; margin: .2rem 0; }
 }
